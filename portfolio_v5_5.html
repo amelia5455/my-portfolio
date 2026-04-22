@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amelia Simpson, Product & Interaction Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: 'Pixel Operator 8';
+    src: url('https://cdn.jsdelivr.net/gh/RetroRaccoon/Pixel-Operator@main/PixelOperator8.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+  :root {
+    --bone: #f2efe8;
+    --ink: #0a0a0a;
+    --ink-soft: #1a1a1a;
+    --rule: #0a0a0a;
+    --muted: #6b6b63;
+    --accent: #ff3e00;
+    --paper: #ebe7de;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bone);
+    color: var(--ink);
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: 0.01em;
+  }
+
+  /* animated noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.04 0 0 0 0 0.04 0 0 0 0 0.04 0 0 0 0.9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size: 220px 220px;
+    pointer-events: none;
+    z-index: 1;
+    mix-blend-mode: multiply;
+    opacity: 0.26;
+    animation: noise-drift 1.6s steps(6) infinite;
+  }
+
+  @keyframes noise-drift {
+    0%   { transform: translate(0, 0); }
+    20%  { transform: translate(-3%, 2%); }
+    40%  { transform: translate(2%, -1%); }
+    60%  { transform: translate(-1%, 3%); }
+    80%  { transform: translate(3%, 1%); }
+    100% { transform: translate(0, 0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body::before { animation: none; }
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    min-height: 100vh;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ---------- SIDEBAR ---------- */
+  aside {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 24px;
+    border-right: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .mark {
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  .mark-lockup {
+    display: block;
+    width: 154px;
+    height: auto;
+  }
+
+  .bio {
+    font-family: 'Geist', ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 300;
+    letter-spacing: -0.005em;
+    margin-bottom: 28px;
+    color: var(--ink-soft);
+  }
+
+  .bio em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .bio .underline {
+    font-style: normal;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 1px;
+  }
+
+  .divider {
+    border: 0;
+    border-top: 1px solid var(--rule);
+    margin: 24px 0 20px;
+  }
+
+  .label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .label::after {
+    display: none;
+  }
+
+  nav.primary ul,
+  nav.connect ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  nav a {
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: color 0.2s;
+    font-family: 'Geist Mono', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  nav a .arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: all 0.2s;
+    color: var(--accent);
+  }
+
+  nav a .arrow svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  nav a:hover {
+    color: var(--accent);
+  }
+
+  nav a:hover .arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  nav a.active {
+    color: var(--accent);
+  }
+
+  .footer {
+    margin-top: auto;
+    padding-top: 24px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .footer .row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .footer .clock {
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+  }
+
+  /* ---------- MAIN ---------- */
+  main {
+    padding: 24px;
+    min-width: 0;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 40px;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .topbar .index {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .intro {
+    font-family: 'Geist', sans-serif;
+    font-size: clamp(32px, 4.2vw, 56px);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    font-weight: 300;
+    margin-bottom: 56px;
+    max-width: 900px;
+  }
+
+  .intro .year {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    vertical-align: super;
+    color: var(--muted);
+    margin-left: 6px;
+  }
+
+  .intro em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* Project grid , restrained system */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    margin-bottom: 60px;
+  }
+
+  /* Hero row: first card spans full width */
+  .project.hero { grid-column: 1 / -1; }
+  .project.hero .project-media { aspect-ratio: 16 / 7; }
+
+  .project {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: var(--paper);
+  }
+
+  .project:hover {
+    transform: translateY(-3px);
+  }
+
+  .project-media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .project-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    mix-blend-mode: multiply;
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+
+  .project:hover .project-media::after {
+    opacity: 0.08;
+  }
+
+  /* Text block inside the card */
+  .project-body {
+    padding: 28px 32px 32px;
+    background: var(--bone);
+    flex: 1;
+  }
+
+  .project-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .project-meta .sep {
+    color: var(--accent);
+    font-size: 28px;
+    line-height: 1;
+    position: relative;
+    top: -2px;
+  }
+
+  .project-title {
+    font-family: 'Pixel Operator 8', 'Geist Mono', monospace;
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: -0.14em;
+    line-height: 1;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+
+  .project-title em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .project-desc {
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- Unified card art system ----------
+     The art area is just the visual. Meta/title/desc live in .project-body below.
+  */
+  .art {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .art .art-mark-type {
+    font-family: 'Geist', sans-serif;
+    font-weight: 300;
+    font-size: clamp(44px, 6.5vw, 88px);
+    line-height: 0.95;
+    letter-spacing: -0.055em;
+    text-align: center;
+  }
+
+  .art .art-mark-type em {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  /* ---------- Per-project color palettes only ---------- */
+
+  /* P1: Besties , warm blush */
+  .art-besties {
+    background: linear-gradient(135deg, #f5d4c8 0%, #e8a895 60%, #d4826a 100%);
+    color: #4a1e15;
+  }
+
+  /* P2: Nested , dark, institutional */
+  .art-nested {
+    background: #1a1a1a;
+    color: #f2efe8;
+  }
+  .art-nested .n-arch {
+    width: 110px;
+    height: 90px;
+    border: 1px solid #f2efe8;
+    border-bottom: none;
+    border-radius: 100% 100% 0 0 / 60% 60% 0 0;
+    position: relative;
+  }
+  .art-nested .n-arch::before {
+    content: '';
+    position: absolute;
+    inset: 10px 10px 0 10px;
+    border: 1px solid var(--accent);
+    border-bottom: none;
+    border-radius: 100% 100% 0 0 / 60% 60% 0 0;
+  }
+
+  /* P3: Trippy , warm sand */
+  .art-trippy {
+    background: linear-gradient(180deg, #e8e4da 0%, #c9c3b2 100%);
+    color: #0a0a0a;
+  }
+  .art-trippy .t-crosshair {
+    width: 72px;
+    height: 72px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    position: relative;
+  }
+  .art-trippy .t-crosshair::before,
+  .art-trippy .t-crosshair::after {
+    content: '';
+    position: absolute;
+    background: var(--accent);
+  }
+  .art-trippy .t-crosshair::before {
+    top: 50%;
+    left: -10px;
+    right: -10px;
+    height: 1px;
+  }
+  .art-trippy .t-crosshair::after {
+    left: 50%;
+    top: -10px;
+    bottom: -10px;
+    width: 1px;
+  }
+
+  /* P5: Cowboy Ted , deep brown */
+  .art-cowboy {
+    background: #2a1810;
+    color: #e8dcc4;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    aside {
+      position: static;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--rule);
+    }
+    main { padding: 24px 24px 24px; }
+    .grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .project.hero .project-media { aspect-ratio: 4 / 3; }
+  }
+
+  /* reveal animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  @keyframes rise {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .d1 { animation-delay: 0.05s; }
+  .d2 { animation-delay: 0.15s; }
+  .d3 { animation-delay: 0.25s; }
+  .d4 { animation-delay: 0.35s; }
+  .d5 { animation-delay: 0.45s; }
+  .d6 { animation-delay: 0.55s; }
+
+  ::selection { background: var(--accent); color: var(--bone); }
+
+  /* ---------- Fluid blob morph keyframes (used by the AmeliaLLM nav icon) ---------- */
+  /* Tight 45 to 65% band keeps corners from ever pinching into a diamond. */
+  @keyframes blob-morph {
+    0%, 100% { border-radius: 58% 52% 48% 62% / 52% 48% 58% 52%; }
+    20%      { border-radius: 52% 58% 54% 48% / 58% 54% 46% 50%; }
+    40%      { border-radius: 48% 54% 62% 56% / 54% 60% 50% 46%; }
+    60%      { border-radius: 56% 48% 52% 58% / 46% 56% 52% 60%; }
+    80%      { border-radius: 62% 54% 50% 54% / 56% 50% 54% 48%; }
+  }
+
+  @keyframes blob-morph-offset {
+    0%, 100% { border-radius: 54% 56% 52% 50% / 50% 54% 52% 56%; }
+    25%      { border-radius: 60% 50% 54% 52% / 54% 46% 58% 52%; }
+    50%      { border-radius: 48% 58% 56% 54% / 62% 50% 48% 54%; }
+    75%      { border-radius: 54% 52% 48% 60% / 48% 58% 54% 50%; }
+  }
+
+  /* ---------- Nav icon: tiny fluid blob for AmeliaLLM ---------- */
+  /* Sized to match the other nav icons (24x24 wrapper, 18x18 visual). */
+  .nav-blob {
+    display: inline-block;
+    position: relative;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .nav-blob::before,
+  .nav-blob::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 58% 52% 48% 62% / 52% 48% 58% 52%;
+  }
+
+  .nav-blob::before {
+    background: linear-gradient(135deg, #ff6438 0%, #ff3e00 60%, #c83208 100%);
+    animation: blob-morph 9s ease-in-out infinite;
+  }
+
+  .nav-blob::after {
+    background: radial-gradient(ellipse 50% 40% at 32% 28%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 65%);
+    animation: blob-morph-offset 12s ease-in-out infinite;
+    mix-blend-mode: overlay;
+  }
+
+  /* ---------- ABOUT section (scoped to #about) ---------- */
+  /* Section label used throughout About */
+  #about .section-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--muted);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  #about .section-label .count {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+  }
+
+  /* Hero: headline + intro copy */
+  #about .hero {
+    padding-top: 48px;
+    padding-bottom: 88px;
+  }
+
+  #about .hero h1 {
+    font-family: 'Geist', ui-sans-serif, system-ui, sans-serif;
+    font-size: clamp(56px, 8vw, 112px);
+    font-weight: 300;
+    letter-spacing: -0.04em;
+    line-height: 0.98;
+    color: var(--ink);
+    margin-bottom: 48px;
+    max-width: 18ch;
+  }
+
+  #about .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  #about .hero-intro {
+    font-family: 'Geist', sans-serif;
+    font-size: clamp(17px, 1.5vw, 20px);
+    line-height: 1.5;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    color: var(--ink-soft);
+    max-width: 62ch;
+  }
+
+  #about .hero-intro p + p { margin-top: 18px; }
+
+  #about .hero-intro em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  /* Photo strip with cursor-tracking pill labels */
+  #about .photo-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 96px;
+  }
+
+  #about .photo-strip .photo {
+    aspect-ratio: 3 / 4;
+    background: var(--paper);
+    overflow: hidden;
+    position: relative;
+    cursor: none;
+  }
+
+  #about .photo-strip .photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Pill overlay tracks pointer via CSS vars set by JS. Only opacity
+     transitions; transform follows pointer directly for zero lag. */
+  #about .photo-strip .photo .pill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(calc(var(--pill-x, 50%) - 50%), calc(var(--pill-y, 50%) - 50%)) scale(0.92);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+    filter: drop-shadow(0 4px 14px rgba(10, 10, 10, 0.35));
+    height: 38px;
+    width: auto;
+    max-width: 90%;
+    z-index: 2;
+  }
+
+  #about .photo-strip .photo:hover .pill {
+    opacity: 1;
+    transform: translate(calc(var(--pill-x, 50%) - 50%), calc(var(--pill-y, 50%) - 50%)) scale(1);
+  }
+
+  /* Experience / Education (three-column résumé rows) */
+  #about .cv-section {
+    margin-bottom: 88px;
+  }
+
+  #about .cv-list {
+    list-style: none;
+  }
+
+  #about .cv-row {
+    display: grid;
+    grid-template-columns: 1.1fr 1.4fr 0.6fr;
+    gap: 32px;
+    padding: 20px 24px;
+    margin: 0 -24px;
+    border-bottom: 1px solid rgba(10, 10, 10, 0.12);
+    align-items: baseline;
+    transition: background 0.2s;
+  }
+
+  #about .cv-row:last-child { border-bottom: none; }
+
+  #about .cv-row:hover {
+    background: rgba(255, 62, 0, 0.08);
+  }
+
+  #about .cv-row .cv-org {
+    font-family: 'Geist', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  #about .cv-row .cv-role {
+    font-family: 'Geist', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+  }
+
+  #about .cv-row .cv-date {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  #about .cv-row .cv-date.current { color: var(--accent); }
+
+  /* Collections (music + tools) */
+  #about .collection {
+    margin-bottom: 88px;
+  }
+
+  #about .collection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  #about .collection-header h2 {
+    font-family: 'Geist', sans-serif;
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 300;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  #about .collection-header h2 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  #about .collection-header .meta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  #about .cover-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+
+  #about .cover {
+    aspect-ratio: 2 / 3;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  #about .cover:hover { transform: translateY(-4px); }
+
+  #about .cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #about .cover-grid.albums .cover { aspect-ratio: 1 / 1; }
+
+  #about .cover-caption {
+    margin-top: 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  #about .cover-caption .title {
+    color: var(--ink);
+    display: block;
+    margin-bottom: 2px;
+    text-transform: none;
+    letter-spacing: 0.02em;
+    font-size: 12px;
+  }
+
+  /* Tools icon grid */
+  #about .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 24px;
+    list-style: none;
+  }
+
+  #about .icon-grid .app {
+    aspect-ratio: 1 / 1;
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  #about .icon-grid .app img {
+    width: 112%;
+    height: 112%;
+    position: absolute;
+    top: -6%;
+    left: -6%;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(10, 10, 10, 0.12));
+    transition: filter 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  #about .icon-grid .app:hover {
+    transform: translateY(-4px) scale(1.03);
+  }
+
+  #about .icon-grid .app:hover img {
+    filter: drop-shadow(0 10px 24px rgba(10, 10, 10, 0.18));
+  }
+
+  /* Hover name label under each icon */
+  #about .icon-grid .app .name-label {
+    position: absolute;
+    bottom: -26px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s, bottom 0.2s;
+    pointer-events: none;
+  }
+
+  #about .icon-grid .app:hover .name-label {
+    opacity: 1;
+    bottom: -20px;
+  }
+
+  /* CTA */
+  #about .cta {
+    margin-top: 40px;
+    padding: 48px 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  #about .cta-text {
+    font-family: 'Geist', sans-serif;
+    font-size: clamp(24px, 3vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    font-weight: 300;
+    color: var(--ink);
+    max-width: 24ch;
+    margin-bottom: 28px;
+  }
+
+  #about .cta-text em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  #about .cta-links {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  #about .cta-links a {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--ink);
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  #about .cta-links a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  #about .cta-links a svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  /* About responsive */
+  @media (max-width: 900px) {
+    #about .hero h1 { font-size: clamp(44px, 11vw, 72px); }
+    #about .photo-strip { grid-template-columns: repeat(3, 1fr); }
+    #about .cover-grid { grid-template-columns: repeat(3, 1fr); }
+    #about .cover-grid.albums { grid-template-columns: repeat(3, 1fr); }
+    #about .cv-row {
+      grid-template-columns: 1fr;
+      gap: 4px;
+      padding: 16px 0;
+    }
+    #about .cv-row .cv-date { text-align: left; }
+    #about .icon-grid { grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  }
+
+  @media (min-width: 901px) and (max-width: 1200px) {
+    #about .icon-grid { grid-template-columns: repeat(6, 1fr); }
+  }
+
+  /* ---------- Tab sections: only one main content section shows at a time ---------- */
+  .tab-section {
+    display: none;
+  }
+  .tab-section.is-active {
+    display: grid; /* grid is correct for .grid; chat-shell overrides to flex below */
+  }
+  /* Chat shell needs flex column, not grid , override when active */
+  #amelialm.tab-section.is-active {
+    display: flex;
+  }
+  /* About uses block flow (sections stacked vertically) */
+  #about.tab-section.is-active {
+    display: block;
+  }
+
+  /* ---------- AmeliaLLM chat shell ---------- */
+  .chat-shell {
+    margin-top: 0;
+    border: 1px solid var(--rule);
+    background: var(--bone);
+    flex-direction: column;
+    min-height: calc(100vh - 96px);
+    position: relative;
+  }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .chat-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .chat-header-left .nav-blob {
+    width: 22px;
+    height: 22px;
+  }
+
+  .chat-header-title {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink);
+  }
+
+  .chat-header-status {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .chat-header-status::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px rgba(255, 62, 0, 0.5);
+  }
+
+  .chat-messages {
+    flex: 1;
+    padding: 28px 22px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .chat-message {
+    max-width: 78%;
+    font-family: 'Geist', ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.55;
+    font-weight: 300;
+  }
+
+  .chat-message.ai {
+    align-self: flex-start;
+    color: var(--ink-soft);
+  }
+
+  .chat-message.ai .chat-meta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .chat-message.ai .chat-meta .nav-blob {
+    width: 14px;
+    height: 14px;
+  }
+
+  .chat-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 22px 18px;
+  }
+
+  .chat-suggestion {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--rule);
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .chat-suggestion:hover {
+    background: var(--ink);
+    color: var(--bone);
+  }
+
+  .chat-input-row {
+    display: flex;
+    align-items: stretch;
+    border-top: 1px solid var(--rule);
+    background: var(--bone);
+  }
+
+  .chat-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 18px 22px;
+    font-family: 'Geist', ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    outline: none;
+  }
+
+  .chat-input::placeholder {
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .chat-send {
+    border: none;
+    background: var(--ink);
+    color: var(--bone);
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0 28px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .chat-send:hover {
+    background: var(--accent);
+  }
+
+  .chat-send:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-blob::before,
+    .nav-blob::after {
+      animation: none;
+      border-radius: 52% 48% 50% 50% / 50% 52% 48% 50%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <aside>
+    <div class="mark reveal d1">
+      <svg class="mark-lockup" width="154" height="21" viewBox="0 0 154 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Amelia Simpson">
+        <path d="M9.96 20.008C9.784 18.968 9.32 17.848 8.568 16.648C7.816 15.432 6.744 14.304 5.352 13.264C3.976 12.224 2.6 11.56 1.224 11.272V10.264C2.584 9.944 3.888 9.352 5.136 8.488C6.4 7.608 7.456 6.552 8.304 5.32C9.168 4.056 9.72 2.808 9.96 1.576H10.968C11.112 2.376 11.4 3.2 11.832 4.048C12.264 4.88 12.816 5.68 13.488 6.448C14.176 7.2 14.944 7.88 15.792 8.488C17.056 9.384 18.344 9.976 19.656 10.264V11.272C18.776 11.448 17.864 11.808 16.92 12.352C15.992 12.896 15.128 13.544 14.328 14.296C13.528 15.032 12.872 15.808 12.36 16.624C11.608 17.824 11.144 18.952 10.968 20.008H9.96Z" fill="#FF3E00"/>
+        <path d="M27.462 15.5L30.57 5.56H31.83L34.938 15.5H33.916L31.2 6.442L28.484 15.5H27.462ZM28.946 12.518L29.268 11.594H33.132L33.454 12.518H28.946ZM39.8605 14.38L37.6765 6.344H37.7885V15.5H36.8365V5.56H38.2925L40.5185 13.876H40.0705L42.2965 5.56H43.7525V15.5H42.8005V6.344H42.9125L40.7285 14.38H39.8605ZM46.4911 15.5V5.56H52.4551V6.484H47.4431V10.068H52.2871V10.978H47.4431V14.576H52.5671V15.5H46.4911ZM55.7256 15.5V5.56H56.6776V15.038L56.2436 14.576H61.8016V15.5H55.7256ZM64.5401 15.5V14.576H67.1021V6.484H64.5401V5.56H70.6161V6.484H68.0541V14.576H70.6161V15.5H64.5401ZM72.9347 15.5L76.0427 5.56H77.3027L80.4107 15.5H79.3887L76.6727 6.442L73.9567 15.5H72.9347ZM74.4187 12.518L74.7407 11.594H78.6047L78.9267 12.518H74.4187ZM95.0017 15.724C94.3204 15.724 93.7091 15.5793 93.1677 15.29C92.6357 15.0007 92.2064 14.604 91.8797 14.1C91.5624 13.5867 91.3851 13.008 91.3477 12.364L92.3417 12.294C92.3791 12.7887 92.5144 13.2273 92.7477 13.61C92.9904 13.9833 93.3031 14.2727 93.6857 14.478C94.0777 14.6833 94.5257 14.786 95.0297 14.786C95.5151 14.786 95.9304 14.7207 96.2757 14.59C96.6304 14.45 96.9011 14.2493 97.0877 13.988C97.2837 13.7267 97.3817 13.414 97.3817 13.05C97.3817 12.714 97.3024 12.42 97.1437 12.168C96.9944 11.9067 96.7144 11.6687 96.3037 11.454C95.8931 11.23 95.2864 11.0107 94.4837 10.796C93.8024 10.6093 93.2471 10.404 92.8177 10.18C92.3884 9.94667 92.0711 9.66667 91.8657 9.34C91.6697 9.004 91.5717 8.584 91.5717 8.08C91.5717 7.548 91.7024 7.07667 91.9637 6.666C92.2251 6.25533 92.5937 5.93333 93.0697 5.7C93.5551 5.45733 94.1337 5.336 94.8057 5.336C95.4871 5.336 96.0704 5.48067 96.5557 5.77C97.0411 6.05 97.4191 6.428 97.6897 6.904C97.9604 7.37067 98.1191 7.88867 98.1657 8.458L97.1717 8.528C97.1344 8.108 97.0177 7.72533 96.8217 7.38C96.6351 7.03467 96.3691 6.764 96.0237 6.568C95.6877 6.372 95.2724 6.274 94.7777 6.274C94.0964 6.274 93.5551 6.43733 93.1537 6.764C92.7617 7.09067 92.5657 7.52 92.5657 8.052C92.5657 8.388 92.6357 8.668 92.7757 8.892C92.9251 9.116 93.1771 9.312 93.5317 9.48C93.8957 9.63867 94.3997 9.80667 95.0437 9.984C95.8837 10.2173 96.5464 10.474 97.0317 10.754C97.5264 11.0247 97.8717 11.3513 98.0677 11.734C98.2731 12.1073 98.3757 12.5553 98.3757 13.078C98.3757 13.61 98.2311 14.0767 97.9417 14.478C97.6524 14.87 97.2511 15.178 96.7377 15.402C96.2337 15.6167 95.6551 15.724 95.0017 15.724ZM100.918 15.5V14.576H103.48V6.484H100.918V5.56H106.994V6.484H104.432V14.576H106.994V15.5H100.918ZM112.617 14.38L110.433 6.344H110.545V15.5H109.593V5.56H111.049L113.275 13.876H112.827L115.053 5.56H116.509V15.5H115.557V6.344H115.669L113.485 14.38H112.617ZM119.303 15.5V5.56H122.215C122.906 5.56 123.503 5.68133 124.007 5.924C124.511 6.15733 124.903 6.498 125.183 6.946C125.463 7.38467 125.603 7.91667 125.603 8.542C125.603 9.16733 125.463 9.69933 125.183 10.138C124.903 10.5767 124.511 10.9127 124.007 11.146C123.503 11.3793 122.906 11.496 122.215 11.496H120.255V15.5H119.303ZM120.255 10.572H122.103C122.934 10.572 123.555 10.3993 123.965 10.054C124.385 9.70867 124.595 9.20467 124.595 8.542C124.595 7.87 124.385 7.36133 123.965 7.016C123.555 6.66133 122.934 6.484 122.103 6.484H120.255V10.572ZM131.38 15.724C130.699 15.724 130.087 15.5793 129.546 15.29C129.014 15.0007 128.585 14.604 128.258 14.1C127.941 13.5867 127.763 13.008 127.726 12.364L128.72 12.294C128.757 12.7887 128.893 13.2273 129.126 13.61C129.369 13.9833 129.681 14.2727 130.064 14.478C130.456 14.6833 130.904 14.786 131.408 14.786C131.893 14.786 132.309 14.7207 132.654 14.59C133.009 14.45 133.279 14.2493 133.466 13.988C133.662 13.7267 133.76 13.414 133.76 13.05C133.76 12.714 133.681 12.42 133.522 12.168C133.373 11.9067 133.093 11.6687 132.682 11.454C132.271 11.23 131.665 11.0107 130.862 10.796C130.181 10.6093 129.625 10.404 129.196 10.18C128.767 9.94667 128.449 9.66667 128.244 9.34C128.048 9.004 127.95 8.584 127.95 8.08C127.95 7.548 128.081 7.07667 128.342 6.666C128.603 6.25533 128.972 5.93333 129.448 5.7C129.933 5.45733 130.512 5.336 131.184 5.336C131.865 5.336 132.449 5.48067 132.934 5.77C133.419 6.05 133.797 6.428 134.068 6.904C134.339 7.37067 134.497 7.88867 134.544 8.458L133.55 8.528C133.513 8.108 133.396 7.72533 133.2 7.38C133.013 7.03467 132.747 6.764 132.402 6.568C132.066 6.372 131.651 6.274 131.156 6.274C130.475 6.274 129.933 6.43733 129.532 6.764C129.14 7.09067 128.944 7.52 128.944 8.052C128.944 8.388 129.014 8.668 129.154 8.892C129.303 9.116 129.555 9.312 129.91 9.48C130.274 9.63867 130.778 9.80667 131.422 9.984C132.262 10.2173 132.925 10.474 133.41 10.754C133.905 11.0247 134.25 11.3513 134.446 11.734C134.651 12.1073 134.754 12.5553 134.754 13.078C134.754 13.61 134.609 14.0767 134.32 14.478C134.031 14.87 133.629 15.178 133.116 15.402C132.612 15.6167 132.033 15.724 131.38 15.724ZM140.334 15.724C139.569 15.724 138.916 15.5233 138.374 15.122C137.833 14.7113 137.418 14.1187 137.128 13.344C136.848 12.5693 136.708 11.636 136.708 10.544C136.708 9.44267 136.848 8.50467 137.128 7.73C137.418 6.95533 137.833 6.36267 138.374 5.952C138.916 5.54133 139.569 5.336 140.334 5.336C141.1 5.336 141.753 5.54133 142.294 5.952C142.836 6.36267 143.246 6.95533 143.526 7.73C143.816 8.50467 143.96 9.44267 143.96 10.544C143.96 11.636 143.816 12.5693 143.526 13.344C143.246 14.1187 142.836 14.7113 142.294 15.122C141.753 15.5233 141.1 15.724 140.334 15.724ZM140.334 14.786C140.894 14.786 141.37 14.6227 141.762 14.296C142.154 13.9693 142.448 13.4887 142.644 12.854C142.85 12.2193 142.952 11.4493 142.952 10.544C142.952 9.63867 142.85 8.86867 142.644 8.234C142.448 7.59 142.154 7.10467 141.762 6.778C141.37 6.442 140.894 6.274 140.334 6.274C139.774 6.274 139.298 6.442 138.906 6.778C138.514 7.10467 138.216 7.59 138.01 8.234C137.814 8.86867 137.716 9.63867 137.716 10.544C137.716 11.4493 137.814 12.2193 138.01 12.854C138.216 13.4887 138.514 13.9693 138.906 14.296C139.298 14.6227 139.774 14.786 140.334 14.786ZM146.251 15.5V5.56H147.609L151.655 14.45V5.56H152.607V15.5H151.249L147.203 6.61V15.5H146.251Z" fill="#0A0A0A"/>
+      </svg>
+    </div>
+
+    <p class="bio reveal d2">
+      Amelia is a <em>Seattle</em> based product designer who builds the interfaces she designs. She's currently <em>open to work</em> and is drawn to AI tooling, consumer products, and making things accessible by default. Probably making her 10th matcha latte of the day.
+    </p>
+
+    <hr class="divider">
+
+    <nav class="primary reveal d3">
+      <div class="label">Index</div>
+      <ul>
+        <li><a href="#work" class="active">Work
+          <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg></span>
+        </a></li>
+        <li><a href="#gallery">Gallery
+          <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="9" rx="1"/><line x1="6" y1="17" x2="6" y2="22"/><line x1="18" y1="17" x2="18" y2="22"/><circle cx="6" cy="16.5" r="0.8" fill="currentColor"/><circle cx="18" cy="16.5" r="0.8" fill="currentColor"/><path d="M6 18 Q12 23 18 18"/></svg></span>
+        </a></li>
+        <li><a href="#about">About
+          <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+        </a></li>
+        <li><a href="#amelialm">AmeliaLLM
+          <span class="arrow"><span class="nav-blob" aria-hidden="true"></span></span>
+        </a></li>
+      </ul>
+    </nav>
+
+    <hr class="divider">
+
+    <nav class="connect reveal d4">
+      <div class="label">Contact</div>
+      <ul>
+        <li><a href="mailto:amelia@winoman.com">Email
+          <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span>
+        </a></li>
+        <li><a href="https://www.linkedin.com/in/amelia-simpson-b00031272/" target="_blank" rel="noopener">LinkedIn
+          <span class="arrow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></span>
+        </a></li>
+        <li><a href="https://github.com/amelia5455" target="_blank" rel="noopener">GitHub
+          <span class="arrow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></span>
+        </a></li>
+        <li><a href="#">Resume
+          <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></span>
+        </a></li>
+      </ul>
+    </nav>
+
+    <div class="footer reveal d5">
+      <div class="row">
+        <span>Seattle, WA</span>
+        <span class="clock" id="clock">...</span>
+      </div>
+      <div>made in claude + figma w/ ♥︎</div>
+    </div>
+  </aside>
+
+  <main>
+    <section id="work" class="grid tab-section is-active">
+
+      <!-- Project 1: Besties (hero) -->
+      <article class="project hero reveal d3">
+        <div class="project-media">
+          <div class="art art-besties">
+            <div class="art-mark-type">besties<br><em>only.</em></div>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-meta">
+            <span>Capstone</span>
+            <span class="sep">✦</span>
+            <span>2025</span>
+          </div>
+          <h2 class="project-title">Besties</h2>
+          <p class="project-desc">A women-only friendship app. 23 surveys, 16 interviews, and a dual-pathway onboarding system.</p>
+        </div>
+      </article>
+
+      <!-- Project 2: Nested -->
+      <article class="project reveal d3">
+        <div class="project-media">
+          <div class="art art-nested">
+            <div class="n-arch"></div>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-meta">
+            <span>Founding role</span>
+            <span class="sep">✦</span>
+            <span>Ongoing</span>
+          </div>
+          <h2 class="project-title">Nested</h2>
+          <p class="project-desc">Founding designer at a senior care cost comparison platform. Care, compared.</p>
+        </div>
+      </article>
+
+      <!-- Project 3: Trippy -->
+      <article class="project reveal d4">
+        <div class="project-media">
+          <div class="art art-trippy">
+            <div class="t-crosshair"></div>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-meta">
+            <span>XR concept</span>
+            <span class="sep">✦</span>
+            <span>2026</span>
+          </div>
+          <h2 class="project-title">Trippy</h2>
+          <p class="project-desc">A five-week case study. An AI tour guide for Meta Ray-Ban Display glasses.</p>
+        </div>
+      </article>
+
+      <!-- Project 4: Cowboy Ted -->
+      <article class="project reveal d5">
+        <div class="project-media">
+          <div class="art art-cowboy">
+            <div class="art-mark-type">learning,<br><em>re-shaped.</em></div>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-meta">
+            <span>Sponsored</span>
+            <span class="sep">✦</span>
+            <span>2024</span>
+          </div>
+          <h2 class="project-title">Cowboy Ted</h2>
+          <p class="project-desc">An educational platform, reshaped. Team capstone focused on IA and long-session interaction patterns.</p>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- About section -->
+    <section id="about" class="tab-section" aria-label="About Amelia">
+
+      <div class="hero">
+        <h1 class="reveal d3">
+          I'm Amelia. <em>Write your headline here.</em>
+        </h1>
+
+        <div class="hero-intro reveal d4">
+          <p>
+            Write the opening paragraph here. Conversational, specific, with a point of view.
+            Avoid "passionate about" and resist listing skills. Your résumé below does that.
+          </p>
+          <p>
+            A second paragraph to say something only you would say. A contrarian design take,
+            a thread between product design and the gallery world, a working principle you've earned.
+          </p>
+          <p>
+            Open to conversations about full-time product roles, interesting contract work,
+            and anything at the edge of art and software.
+          </p>
+        </div>
+      </div>
+
+      <!-- PHOTO STRIP -->
+      <div class="photo-strip reveal d5" aria-label="Personal photos">
+        <figure class="photo">
+          <img src="images/coco.jpeg" alt="" />
+          <img class="pill" src="pills/coco.svg" alt="Coquito" />
+        </figure>
+        <figure class="photo">
+          <img src="images/me.jpeg" alt="" />
+          <img class="pill" src="pills/me.svg" alt="Me" />
+        </figure>
+        <figure class="photo">
+          <img src="images/scuba.jpeg" alt="" />
+          <img class="pill" src="pills/scuba.svg" alt="Scuba" />
+        </figure>
+        <figure class="photo">
+          <img src="images/screenprinting.jpg" alt="" />
+          <img class="pill" src="pills/studio.svg" alt="Studio" />
+        </figure>
+        <figure class="photo">
+          <img src="images/seattle.jpg" alt="" />
+          <img class="pill" src="pills/home.svg" alt="Home" />
+        </figure>
+      </div>
+
+      <!-- EXPERIENCE -->
+      <div class="cv-section">
+        <div class="section-label">
+          <span>Experience</span>
+          <span class="count">SINCE 2025</span>
+        </div>
+        <ul class="cv-list">
+          <li class="cv-row">
+            <div class="cv-org">Nested</div>
+            <div class="cv-role">Founding Product Designer</div>
+            <div class="cv-date current">2025-Present</div>
+          </li>
+          <li class="cv-row">
+            <div class="cv-org">Independent / Freelance</div>
+            <div class="cv-role">Product Designer</div>
+            <div class="cv-date current">2025-Present</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- EDUCATION -->
+      <div class="cv-section">
+        <div class="section-label">
+          <span>Education</span>
+        </div>
+        <ul class="cv-list">
+          <li class="cv-row">
+            <div class="cv-org">Washington State University</div>
+            <div class="cv-role">B.A. Digital Technology & Culture · Minor, Fine Arts</div>
+            <div class="cv-date">2020-2025</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- COLLECTION: MUSIC -->
+      <div class="collection">
+        <div class="collection-header">
+          <h2>On <em>repeat</em></h2>
+          <span class="meta">Albums I come back to</span>
+        </div>
+        <div class="cover-grid albums">
+          <div class="cover-item">
+            <a class="cover" href="https://open.spotify.com/album/5YlBA1tCY0M8DDs75RB2LY" target="_blank" rel="noopener" aria-label="Listen to Messy by Olivia Dean on Spotify">
+              <img src="albums/messy.jpeg" alt="Messy, Olivia Dean" />
+            </a>
+            <div class="cover-caption">
+              <span class="title">Messy</span>
+              Olivia Dean
+            </div>
+          </div>
+          <div class="cover-item">
+            <a class="cover" href="https://open.spotify.com/album/097eYvf9NKjFnv4xA9s2oV" target="_blank" rel="noopener" aria-label="Listen to Back to Black on Spotify">
+              <img src="albums/backtoblack.png" alt="Back to Black, Amy Winehouse" />
+            </a>
+            <div class="cover-caption">
+              <span class="title">Back to Black</span>
+              Amy Winehouse
+            </div>
+          </div>
+          <div class="cover-item">
+            <a class="cover" href="https://open.spotify.com/album/5K79FLRUCSysQnVESLcTdb" target="_blank" rel="noopener" aria-label="Listen to DeBÍ TiRAR MáS FOToS on Spotify">
+              <img src="albums/dtmf.png" alt="DTMF, Bad Bunny" />
+            </a>
+            <div class="cover-caption">
+              <span class="title">DeBÍ TiRAR MáS FOToS</span>
+              Bad Bunny
+            </div>
+          </div>
+          <div class="cover-item">
+            <a class="cover" href="https://open.spotify.com/album/2Xs9xSBhvyo8F6daRc1npu" target="_blank" rel="noopener" aria-label="Listen to Texas Moon on Spotify">
+              <img src="albums/texasmoon.jpg" alt="Texas Moon, Khruangbin & Leon Bridges" />
+            </a>
+            <div class="cover-caption">
+              <span class="title">Texas Moon</span>
+              Khruangbin & Leon Bridges
+            </div>
+          </div>
+          <div class="cover-item">
+            <a class="cover" href="https://open.spotify.com/album/1NjMj1u1EQxn8oESg40bPA" target="_blank" rel="noopener" aria-label="Listen to Open This Wall on Spotify">
+              <img src="albums/openthiswall.jpeg" alt="Open This Wall, Berlioz" />
+            </a>
+            <div class="cover-caption">
+              <span class="title">Open This Wall</span>
+              Berlioz
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLLECTION: TOOLS -->
+      <div class="collection">
+        <div class="collection-header">
+          <h2>In my <em>stack</em></h2>
+          <span class="meta">What I actually reach for</span>
+        </div>
+        <ul class="icon-grid">
+          <li class="app">
+            <img src="icons/figma.png" alt="Figma" />
+            <span class="name-label">Figma</span>
+          </li>
+          <li class="app">
+            <img src="icons/framer.png" alt="Framer" />
+            <span class="name-label">Framer</span>
+          </li>
+          <li class="app">
+            <img src="icons/cursor.png" alt="Cursor" />
+            <span class="name-label">Cursor</span>
+          </li>
+          <li class="app">
+            <img src="icons/github.png" alt="GitHub Desktop" />
+            <span class="name-label">GitHub</span>
+          </li>
+          <li class="app">
+            <img src="icons/chatgpt.png" alt="ChatGPT" />
+            <span class="name-label">ChatGPT</span>
+          </li>
+          <li class="app">
+            <img src="icons/illustrator.png" alt="Adobe Illustrator" />
+            <span class="name-label">Illustrator</span>
+          </li>
+          <li class="app">
+            <img src="icons/photoshop.png" alt="Adobe Photoshop" />
+            <span class="name-label">Photoshop</span>
+          </li>
+          <li class="app">
+            <img src="icons/aftereffects.png" alt="Adobe After Effects" />
+            <span class="name-label">After Effects</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta">
+        <p class="cta-text">
+          Working on something <em>interesting?</em> I'd love to hear about it.
+        </p>
+        <div class="cta-links">
+          <a href="mailto:amelia@winoman.com">
+            Email
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/in/amelia-simpson-b00031272/" target="_blank" rel="noopener">
+            LinkedIn
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+          </a>
+          <a href="#">
+            Resume
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- AmeliaLLM chat section -->
+    <section id="amelialm" class="chat-shell tab-section" aria-label="Chat with AmeliaLLM">
+      <header class="chat-header">
+        <div class="chat-header-left">
+          <span class="nav-blob" aria-hidden="true"></span>
+          <span class="chat-header-title">AmeliaLLM</span>
+        </div>
+        <span class="chat-header-status">Online</span>
+      </header>
+
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-message ai">
+          <div class="chat-meta">
+            <span class="nav-blob" aria-hidden="true"></span>
+            <span>AmeliaLLM</span>
+          </div>
+          <p>Hi, I'm AmeliaLLM, a small language model trained on Amelia's work, writing, and design philosophy. Ask me about her projects, process, or what she's looking for next.</p>
+        </div>
+      </div>
+
+      <div class="chat-suggestions">
+        <button class="chat-suggestion" type="button">What's Besties?</button>
+        <button class="chat-suggestion" type="button">How does Amelia approach design?</button>
+        <button class="chat-suggestion" type="button">Is she open to work?</button>
+      </div>
+
+      <form class="chat-input-row" id="chat-form" onsubmit="return false;">
+        <input
+          type="text"
+          class="chat-input"
+          id="chat-input"
+          placeholder="Ask AmeliaLLM anything…"
+          aria-label="Message AmeliaLLM"
+          autocomplete="off"
+        />
+        <button type="submit" class="chat-send" disabled>Send</button>
+      </form>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  function tick() {
+    const now = new Date();
+    const seattle = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Los_Angeles',
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+    }).format(now);
+    const el = document.getElementById('clock');
+    if (el) el.textContent = seattle;
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // ---- Tab switching ----
+  // Nav links with a target section (id exists in DOM) act as tabs.
+  // Links without a matching section are left inert for now.
+  const navLinks = document.querySelectorAll('nav.primary a[href^="#"]');
+  const sections = document.querySelectorAll('.tab-section');
+
+  function setActiveTab(targetId) {
+    const target = document.getElementById(targetId);
+    if (!target || !target.classList.contains('tab-section')) return false;
+
+    sections.forEach((s) => s.classList.toggle('is-active', s.id === targetId));
+    navLinks.forEach((a) => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + targetId);
+    });
+
+    // Focus the chat input when AmeliaLLM opens , feels responsive
+    if (targetId === 'amelialm') {
+      const input = document.getElementById('chat-input');
+      if (input) setTimeout(() => input.focus(), 50);
+    }
+    return true;
+  }
+
+  navLinks.forEach((a) => {
+    a.addEventListener('click', (e) => {
+      const href = a.getAttribute('href') || '';
+      const id = href.replace('#', '');
+      // Only intercept if the target is actually a tab section
+      if (document.getElementById(id)?.classList.contains('tab-section')) {
+        e.preventDefault();
+        setActiveTab(id);
+        history.replaceState(null, '', href);
+      }
+    });
+  });
+
+  // Deep-link support: honor the hash on page load
+  const initial = window.location.hash.replace('#', '');
+  if (initial) setActiveTab(initial);
+
+  // ---- Chat shell interactivity ----
+  const chatInput = document.getElementById('chat-input');
+  const chatSend = document.querySelector('.chat-send');
+  if (chatInput && chatSend) {
+    chatInput.addEventListener('input', () => {
+      chatSend.disabled = chatInput.value.trim().length === 0;
+    });
+  }
+
+  document.querySelectorAll('.chat-suggestion').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (chatInput) {
+        chatInput.value = btn.textContent;
+        chatInput.focus();
+        chatSend.disabled = false;
+      }
+    });
+  });
+
+  // ---- Photo strip pill tracking (About section) ----
+  // Pill replaces the cursor within each photo, tracks pointer position via CSS vars.
+  // Setting position in `mouseenter` before `:hover` triggers prevents the pill from
+  // flying in from a default spot at entry.
+  document.querySelectorAll('.photo-strip .photo').forEach((photo) => {
+    const updatePosition = (e) => {
+      const rect = photo.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      photo.style.setProperty('--pill-x', x + 'px');
+      photo.style.setProperty('--pill-y', y + 'px');
+    };
+    photo.addEventListener('mouseenter', updatePosition);
+    photo.addEventListener('mousemove', updatePosition);
+  });
+</script>
+
+
+</body>
+</html>
